@@ -1,7 +1,7 @@
 ## Works in FreeCAD 0.21.2
 ## We do need a GUI though to run this: https://wiki.freecadweb.org/Headless%20FreeCAD
 
-## When changing this file, you need to reinstall it:
+## When modifying this file, you need to reinstall it:
 # > import subprocess
 # > import sys
 # > import os
@@ -190,7 +190,6 @@ class AssemblyProject:
        self.doc = App.newDocument(name)
        self.warning= ""
        App.setActiveDocument(self.doc.Name)
-       self.topView = True
        Gui.ActiveDocument.ActiveView.getCameraNode().orientation = coin.SbRotation((-0.3320808410644531, 0.3825216293334961, 0.2297523319721222, 0.8310315608978271))
 
     # Import step file and move to correct orientation/location
@@ -217,16 +216,18 @@ class AssemblyProject:
     # Change camera view
     # You can get these values by using:
     # Gui.ActiveDocument.ActiveView.getCameraNode().orientation.getValue().getValue()
-    def toggleView(self):
+    # tyep can be "top", "bottom", "rear"
+    def setView(self, type):
 
-     if self.topView:
-      Gui.ActiveDocument.ActiveView.getCameraNode().orientation = coin.SbRotation((-0.8310316205024719, -0.22975212335586548, 0.3825218379497528, -0.33208033442497253))
-     else:
+     if type is None or type == "top":
       Gui.ActiveDocument.ActiveView.getCameraNode().orientation = coin.SbRotation((-0.3320808410644531, 0.3825216293334961, 0.2297523319721222, 0.8310315608978271))
+     elif type == "bottom":
+      Gui.ActiveDocument.ActiveView.getCameraNode().orientation = coin.SbRotation((-0.8310316205024719, -0.22975212335586548, 0.3825218379497528, -0.33208033442497253))
+     elif type == "rear":
+      Gui.ActiveDocument.ActiveView.getCameraNode().orientation = coin.SbRotation((-0.25843220949172974, -0.8129563927650452, -0.3023499548435211, 0.42532244324684143))
 
      Gui.SendMsgToActiveView("ViewFit")
      #Gui.ActiveDocument.ActiveView.getCameraNode().position = coin.SbVec3f((41.63908767700195, 30.38764190673828, 42.459869384765625))
-     self.topView = not self.topView
 
      # Save image
      #toggle_image.Visibility = True
